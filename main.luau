@@ -23,14 +23,14 @@ function tree.init()
 	meta.pulseConnections = {}
 	meta.glowTweens = {}
 	return meta
-end
+end -- creating metatble
 
 function tree:animate(slot, property, duration, style, direction)
 	local info = TweenInfo.new(duration or 0.1, style or Enum.EasingStyle.Quint, direction or Enum.EasingDirection.InOut)
 	local tween = TweenService:Create(slot, info, property)
 	tween:Play()
 	return tween
-end
+end -- animate function so i can animate gui faster
 
 function tree:animateSplash(slot, property)
 	local tween = TweenService:Create(slot, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), property)
@@ -43,7 +43,7 @@ function tree:animateSplash(slot, property)
 			slot:Destroy()
 		end)
 	end)
-end
+end -- splash animation
 
 function tree:pulse(slot, originalsize)
 	if self.pulseConnections[slot] then
@@ -61,14 +61,14 @@ function tree:pulse(slot, originalsize)
 		slot.Size = originalsize + UDim2.new(pulse, 0, pulse * 2, 0)
 	end)
 	self.pulseConnections[slot] = connection
-end
+end -- pulse animation
 
 function tree:stopPulse(slot)
 	if self.pulseConnections[slot] then
 		self.pulseConnections[slot]:Disconnect()
 		self.pulseConnections[slot] = nil
 	end
-end
+end -- stopping pulse animanion
 
 function tree:glow(slot)
 	local glow = script.Parent.UIShadow:Clone()
@@ -77,7 +77,7 @@ function tree:glow(slot)
 	tween:Play()
 	self.glowTweens[slot] = tween
 	return glow
-end
+end -- glow
 
 function tree:removeGlow(slot)
 	if self.glowTweens[slot] then
@@ -88,7 +88,7 @@ function tree:removeGlow(slot)
 	if glow then
 		glow:Destroy()
 	end
-end
+end -- no glow
 
 function tree:shake(slot)
 	local originalPos = slot.Position
@@ -102,7 +102,7 @@ function tree:shake(slot)
 			shakeTween3:Play()
 		end)
 	end)
-end
+end -- shaking animation
 
 function tree:flash(slot)
 	local flash = script.Parent.flash:Clone()
@@ -113,7 +113,7 @@ function tree:flash(slot)
 	tween.Completed:Connect(function()
 		flash:Destroy()
 	end)
-end
+end -- flash animation
 
 function tree:rotate(slot)
 	local rotateTween = TweenService:Create(slot, TweenInfo.new(0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Rotation = 5})
@@ -122,7 +122,7 @@ function tree:rotate(slot)
 		local rotateTween2 = TweenService:Create(slot, TweenInfo.new(0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Rotation = 0})
 		rotateTween2:Play()
 	end)
-end
+end -- rotate anim
 
 function tree:scaleBounce(slot, originalsize)
 	local bounceTween = TweenService:Create(slot, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = originalsize + UDim2.new(0.02, 0, 0.04, 0)})
@@ -131,7 +131,7 @@ function tree:scaleBounce(slot, originalsize)
 		local bounceTween2 = TweenService:Create(slot, TweenInfo.new(0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = originalsize})
 		bounceTween2:Play()
 	end)
-end
+end -- scale bounce anim
 
 function tree:appear(slot, originalsize)
 	slot.Size = UDim2.new(0, 0, 0, 0)
@@ -139,7 +139,7 @@ function tree:appear(slot, originalsize)
 	local appearTween = TweenService:Create(slot, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = originalsize, Rotation = 0})
 	appearTween:Play()
 	return appearTween
-end
+end -- appear animation
 
 function tree:disappear(slot)
 	local disappearTween = TweenService:Create(slot, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0), Rotation = 10})
@@ -147,7 +147,7 @@ function tree:disappear(slot)
 	disappearTween.Completed:Connect(function()
 		slot:Destroy()
 	end)
-end
+end -- and dissapear
 
 function tree:show(position, parented, name, isHidden)
 	local template = script.Parent.Slot:Clone()
@@ -156,12 +156,12 @@ function tree:show(position, parented, name, isHidden)
 	template.Parent = script.Parent.Parent.Frame.Slots
 	template.Name = name
 	template.cashAmount.Text = SkillTreeConfiguration.SkillTree.Slots[tonumber(name)].cost
-	template.Title.Text = SkillTreeConfiguration.SkillTree.Slots[tonumber(name)].title
+	template.Title.Text = SkillTreeConfiguration.SkillTree.Slots[tonumber(name)].title -- setting template config
 	if parented then
 		template.Position = parented.Position + positioning[position]
 	else
 		template.Position = positioning[position]
-	end
+	end -- positioning
 	template.Visible = true
 	self.slots[#self.slots + 1] = template
 	self:appear(template, originalsize)
@@ -181,13 +181,13 @@ function tree:show(position, parented, name, isHidden)
 		if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
 			self:hold(template, originalsize)
 		end
-	end)
+	end) -- hold function
 	
 	hover.InputEnded:Connect(function(inp)
 		if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
 			self:unhold(template, originalsize)
 		end
-	end)
+	end) -- unhold function
 	
 	if isHidden then
 		for i, v in pairs(template:GetChildren()) do
@@ -195,10 +195,10 @@ function tree:show(position, parented, name, isHidden)
 				v.Visible = false
 			end
 		end
-		template.Image = "rbxassetid://131157804052950"
-		self:pulse(template, originalsize)
+		template.Image = "rbxassetid://131157804052950" -- changes image
+		self:pulse(template, originalsize) -- pulses
 	end
-end
+end -- showing skill
 
 function tree:showChild(slot)
 	for i, v in pairs(SkillTreeConfiguration.SkillTree.Slots) do
@@ -206,7 +206,7 @@ function tree:showChild(slot)
 			local existing = script.Parent.Parent.Frame.Slots:FindFirstChild(v.name)
 			if not existing then
 				self:show(v.positioned, slot, v.name, true)
-			end
+			end -- showing child if parent exists
 		end
 	end
 end
@@ -223,7 +223,7 @@ function tree:revealChild(slot)
 	self:scaleBounce(slot, slot.Size)
 	self:flash(slot)
 	self:showChild(slot)
-end
+end -- revealing skill
 
 function tree:buySlot(slot)
 	if table.find(self.buyed, slot.Name) then
@@ -231,10 +231,10 @@ function tree:buySlot(slot)
 	end
 	local success = game.ReplicatedStorage.Remotes.Functions.buy:InvokeServer(slot.Name)
 	if success then
-		table.insert(self.buyed, slot.Name)
+		table.insert(self.buyed, slot.Name) -- inserting buyed skill into table
 	end
 	return success
-end
+end -- buying
 
 function tree:hover(slot, size)
 	self:animate(slot, {Size = size + UDim2.new(0.013,0,0.03,0)}, 0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
@@ -257,13 +257,13 @@ function tree:cashSplash(slot)
 		clone.Position = slot.Cash.Position
 		self:animateSplash(clone, {Position = clone.Position + UDim2.new(0, math.random(-35,35),0,math.random(-25,25))})
 	end
-end
+end -- anim
 
 function tree:unhold(slot, size)
 	self:animate(slot, {Size = size}, 0.12, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 	local alreadyBuyed = table.find(self.buyed, slot.Name) ~= nil
 	
-	if self:buySlot(slot) then
+	if self:buySlot(slot) then -- if slot buy succes
 		slot.Image = "rbxassetid://93610990442351"
 		self:scaleBounce(slot, size)
 		self:rotate(slot)
@@ -304,6 +304,6 @@ function tree:restore(purchasedSkills)
 		end
 		
 	end
-end
+end -- data store function, restoring skill tree
 
 return tree
